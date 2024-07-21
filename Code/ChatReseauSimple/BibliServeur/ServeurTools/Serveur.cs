@@ -100,6 +100,8 @@ namespace BibliServeur.ServeurTools
             string str = GetMessageFromSocket(_s);
             this.NotifyOnReceiveMessage(new Message(str));
             SendConfirmMessage(_s, "J'ai bien reçu ton message : " + str);
+            Thread.Sleep(100);
+            SendConfirmMessage(_s, "Test quand meme");
         }
 
         private string GetMessageFromSocket(Socket _s)

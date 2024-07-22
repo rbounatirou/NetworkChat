@@ -56,6 +56,11 @@ namespace BibliServeur.ServeurTools
             listener = new TcpListener(IPAddress.Parse(ipAddress), listenPort);
         }
 
+        ~Serveur()
+        {
+            listener.Stop();
+        }
+
         public void Start()
         {
             listener.Start();
@@ -123,15 +128,31 @@ namespace BibliServeur.ServeurTools
 
         private string GetMessageFromSocket(Socket _s)
         {
-            byte[] b = new byte[100];
-            int k = _s.Receive(b);
+            string str = "";
+            const int BUFFER_SIZE = 100;
+            byte[] b;
+            int k;
 
+            do
+            {
+                b = new byte[BUFFER_SIZE];
+                k = _s.Receive(b);
+                str += Encoding.UTF8.GetString(b).Substring(0,k);
+
+
+            } while (_s.Available > 0);
+            return str;
+            /*
+            int k = _s.Receive(b);
+            
+            
             string str = "";
             for (int i = 0; i < k; i++)
                 str = str + Convert.ToChar(b[i]);
-            
-            return str;
+            k = _s.Receive(b);
+            return str;*/
         }
+
 
         private void SendConfirmMessage(Socket _s, string _message)
         {

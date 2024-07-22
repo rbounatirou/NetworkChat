@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServeurConsole", "ServeurCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientConsole", "ClientConsole\ClientConsole.csproj", "{A3E677C4-37AA-42D2-A1AD-21256098B94B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliClient", "BibliClient\BibliClient.csproj", "{9CE19A49-E12C-4389-9FB6-306458EC7753}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BibliClient", "BibliClient\BibliClient.csproj", "{9CE19A49-E12C-4389-9FB6-306458EC7753}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientWinform", "ClientWinform\ClientWinform.csproj", "{20126580-A8B1-44F8-9AE2-507F493FD448}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{9CE19A49-E12C-4389-9FB6-306458EC7753}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CE19A49-E12C-4389-9FB6-306458EC7753}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CE19A49-E12C-4389-9FB6-306458EC7753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20126580-A8B1-44F8-9AE2-507F493FD448}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20126580-A8B1-44F8-9AE2-507F493FD448}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20126580-A8B1-44F8-9AE2-507F493FD448}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20126580-A8B1-44F8-9AE2-507F493FD448}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

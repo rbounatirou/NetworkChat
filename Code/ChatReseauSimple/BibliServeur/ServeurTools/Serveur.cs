@@ -56,6 +56,11 @@ namespace BibliServeur.ServeurTools
             listener = new TcpListener(IPAddress.Parse(ipAddress), listenPort);
         }
 
+        ~Serveur()
+        {
+            listener.Stop();
+        }
+
         public void Start()
         {
             listener.Start();
@@ -66,28 +71,35 @@ namespace BibliServeur.ServeurTools
                 //accept
                 
                 Socket s = listener.AcceptSocket();
-                //receive
-                bool end = false;
-                while (!end)
-                {
-                    try
-                    {
-                        ReceiveClient(s);
-                    } catch (SocketException e)
-                    {
-                        end = true;
-                        s.Close();
-                    }
-                }
-                this.NotifyOnServerStop();
-                //s.Close();
-            }
 
+                //receive
+
+                Thread th = new Thread(new ThreadStart(()=>ReceiveMessage(s)));
+                th.Start();
+            }
+            this.NotifyOnServerStop();
+        }
+
+        private void ReceiveMessage(Socket _s)
+        {
+            bool end = false;
+            while (!end)
+            {
+                try
+                {
+                    ReceiveClient(_s);
+                }
+                catch (SocketException e)
+                {
+                    end = true;
+                    _s.Close();
+                }
+            }
         }
 
         private void AddClient(Utilisateur _s)
         {
-            if (clients.Find(c => c.Socket.LocalEndPoint.Equals(_s.Socket.LocalEndPoint)) != null)
+            if (clients.Find(c => c.Socket.Connected && c.Socket.RemoteEndPoint.Equals(_s.Socket.RemoteEndPoint)) != null)
                 return;
             clients.Add(_s);
             this.NotifyOnClientJoin(_s);
@@ -99,20 +111,48 @@ namespace BibliServeur.ServeurTools
             AddClient(new Utilisateur(_s));
             string str = GetMessageFromSocket(_s);
             this.NotifyOnReceiveMessage(new Message(str));
-            SendConfirmMessage(_s, "J'ai bien reçu ton message : " + str);
+            SendMessageToAll(str);
+
+        }
+
+        private void SendMessageToAll(string _s)
+        {
+            List<Utilisateur> userConnected = clients.FindAll(c => c.Socket.Connected);
+
+            for (int i = 0; i < userConnected.Count; i++)
+            {
+                Socket tmp = userConnected[i].Socket;
+                SendConfirmMessage(tmp, _s);
+            }
         }
 
         private string GetMessageFromSocket(Socket _s)
         {
-            byte[] b = new byte[100];
-            int k = _s.Receive(b);
+            string str = "";
+            const int BUFFER_SIZE = 100;
+            byte[] b;
+            int k;
 
+            do
+            {
+                b = new byte[BUFFER_SIZE];
+                k = _s.Receive(b);
+                str += Encoding.UTF8.GetString(b).Substring(0,k);
+
+
+            } while (_s.Available > 0);
+            return str;
+            /*
+            int k = _s.Receive(b);
+            
+            
             string str = "";
             for (int i = 0; i < k; i++)
                 str = str + Convert.ToChar(b[i]);
-            
-            return str;
+            k = _s.Receive(b);
+            return str;*/
         }
+
 
         private void SendConfirmMessage(Socket _s, string _message)
         {
